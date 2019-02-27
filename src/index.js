@@ -21,18 +21,21 @@ function showTrainer (trainer) {
   let addBtn = document.createElement('button')
   let pokeList = document.createElement('ul')
 
-  trainer.pokemons.forEach((pokemon) => {
+  trainer.pokemons.forEach((pokemon) => { //try with a regular for loop
     let pokeName = document.createElement('li')
     let relBtn = document.createElement('button')
 
     pokeName.innerText = `${pokemon.nickname} (${pokemon.species})`
+    pokeName.id = `trainer-${pokemon.trainer_id}-pokemon-${pokemon.id}`
     relBtn.className = 'release'
     relBtn.innerText = 'Release'
 
     pokeList.appendChild(pokeName)
     pokeName.appendChild(relBtn)
 
-    relBtn.addEventListener('click', releasePokemon)
+    relBtn.addEventListener('click', () => {
+      releasePokemon(pokemon)
+    })
   })
 
   trainerDiv.className = 'card'
@@ -69,11 +72,26 @@ function showNewPokemon (pokemon) {
   let relBtn = document.createElement('button')
 
   pokeName.innerText = `${pokemon.nickname} (${pokemon.species})`
+  pokeName.id = `trainer-${pokemon.trainer_id}-pokemon-${pokemon.id}`
   relBtn.className = 'release'
   relBtn.innerText = 'Release'
 
   pokeList.appendChild(pokeName)
   pokeName.appendChild(relBtn)
 
-  relBtn.addEventListener('click', releasePokemon)
+  relBtn.addEventListener('click', () => {
+    releasePokemon(pokemon)
+  })
+}
+
+// release a pokemon from front end optimistically
+function releasePokemon (pokemon) {
+  let poke = document.getElementById(`trainer-${pokemon.trainer_id}-pokemon-${pokemon.id}`)
+  poke.remove()
+  deletePokemon(pokemon)
+}
+
+// 'release' pokemon from backend
+function deletePokemon (pokemon) {
+  fetch()
 }
