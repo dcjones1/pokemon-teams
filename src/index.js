@@ -93,5 +93,5 @@ function releasePokemon (pokemon) {
 
 // 'release' pokemon from backend
 function deletePokemon (pokemon) {
-  fetch()
+  fetch(`http://localhost:3000/pokemons/${pokemon.id}`, {method: 'delete'})
 }
