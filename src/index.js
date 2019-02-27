@@ -51,18 +51,22 @@ function showTrainer (trainer) {
 
 // add a pokemon from the backend
 function addPokemon (e) {
-  debugger
-  let id = e.target.nextElementSibling.id.split('-')[1]
-  fetch('http://localhost:3000/pokemons', {
-    method: 'post',
-    body: JSON.stringify({trainer_id: id}),
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    }
-  })
-  .then(res => res.json())
-  .then(pokemon => showNewPokemon(pokemon))
+  let pokeCount = e.target.nextElementSibling.children.length
+  if (pokeCount <= 5) {
+    let id = e.target.nextElementSibling.id.split('-')[1]
+    fetch('http://localhost:3000/pokemons', {
+      method: 'post',
+      body: JSON.stringify({trainer_id: id}),
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      }
+    })
+    .then(res => res.json())
+    .then(pokemon => showNewPokemon(pokemon))
+  } else {
+    window.alert("You can only have 6 pokemon!!! Don't be greedy, give one up and then you can add another.")
+  }
 }
 
 // add the new pokemon to the front end
