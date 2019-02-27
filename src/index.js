@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
   fetchTrainers()
 })
 
-
 // fetch trainers and their associated pokemon
 function fetchTrainers () {
   fetch('http://localhost:3000/trainers')
@@ -13,30 +12,15 @@ function fetchTrainers () {
 }
 
 function showTrainer (trainer) {
-  // access pokemon by trainer.pokemons[0]
-  // refactor with a showpokemon later
   let main = document.querySelector('main')
   let trainerDiv = document.createElement('div')
   let trainerName = document.createElement('p')
   let addBtn = document.createElement('button')
   let pokeList = document.createElement('ul')
 
-  trainer.pokemons.forEach((pokemon) => { //try with a regular for loop
-    let pokeName = document.createElement('li')
-    let relBtn = document.createElement('button')
-
-    pokeName.innerText = `${pokemon.nickname} (${pokemon.species})`
-    pokeName.id = `trainer-${pokemon.trainer_id}-pokemon-${pokemon.id}`
-    relBtn.className = 'release'
-    relBtn.innerText = 'Release'
-
-    pokeList.appendChild(pokeName)
-    pokeName.appendChild(relBtn)
-
-    relBtn.addEventListener('click', () => {
-      releasePokemon(pokemon)
-    })
-  })
+  for (let i = 0; i < trainer.pokemons.length; i++) {
+    showPokemon(trainer.pokemons[i], pokeList)
+  }
 
   trainerDiv.className = 'card'
   trainerName.innerText = trainer.name
@@ -46,32 +30,35 @@ function showTrainer (trainer) {
   main.appendChild(trainerDiv)
   trainerDiv.append(trainerName, addBtn, pokeList)
 
-  addBtn.addEventListener('click' , addPokemon)
+  addBtn.addEventListener('click' , () => {
+    addPokemon(trainer)
+  })
 }
 
 // add a pokemon from the backend
-function addPokemon (e) {
-  let pokeCount = e.target.nextElementSibling.children.length
+function addPokemon (trainer) {
+  let pokeCount = this.event.target.nextElementSibling.children.length
   if (pokeCount <= 5) {
-    let id = e.target.nextElementSibling.id.split('-')[1]
     fetch('http://localhost:3000/pokemons', {
       method: 'post',
-      body: JSON.stringify({trainer_id: id}),
+      body: JSON.stringify({trainer_id: trainer.id}),
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json"
       }
     })
     .then(res => res.json())
-    .then(pokemon => showNewPokemon(pokemon))
+    .then(pokemon => showPokemon(pokemon))
   } else {
     window.alert("You can only have 6 pokemon!!! Don't be greedy, give one up and then you can add another.")
   }
 }
 
 // add the new pokemon to the front end
-function showNewPokemon (pokemon) {
-  let pokeList = document.getElementById(`trainer-${pokemon.trainer_id}`)
+function showPokemon (pokemon, pokeList) {
+  if (pokeList === undefined) {
+    pokeList = document.getElementById(`trainer-${pokemon.trainer_id}`)
+  }
   let pokeName = document.createElement('li')
   let relBtn = document.createElement('button')
 
