@@ -44,3 +44,33 @@ function showTrainer (trainer) {
 
   addBtn.addEventListener('click' , addPokemon)
 }
+
+// add a pokemon from the backend
+function addPokemon () {
+  fetch('http://localhost:3000/pokemons', {
+    method: 'post',
+    body: JSON.stringify({trainer_id: 1}), // MAKE ME DYNAMIC
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    }
+  })
+  .then(res => res.json())
+  .then(pokemon => showNewPokemon(pokemon))
+}
+
+// add the new pokemon to the front end
+function showNewPokemon (pokemon) {
+  debugger
+  let pokeName = document.createElement('li')
+  let relBtn = document.createElement('button')
+
+  pokeName.innerText = `${pokemon.nickname} (${pokemon.species})`
+  relBtn.className = 'release'
+  relBtn.innerText = 'Release'
+
+  pokeList.appendChild(pokeName)
+  pokeName.appendChild(relBtn)
+
+  // relBtn.addEventListener('click', releasePokemon)
+}
